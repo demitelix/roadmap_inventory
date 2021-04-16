@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View All Books</title>
+</head>
+<body>
+<table>
+    <tr><td>id</td><td>Title</td><td>Author</td><td>Status</td></tr>
+    <tr th:each="book: ${all}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.bookStatus}"></td>
+        <td th:if="${#strings.toString(book.bookStatus) == 'RESERVED'}">
+        <form th:method="GET" th:action="@{/{id}/returnBook(id=${book.id})}"><input type="submit" value="Return" /></form>
+        </td>
+        <td th:if="${#strings.toString(book.bookStatus) == 'AVAILABLE'}">
+            <form th:method="GET" th:action="@{/{id}/reserveBook(id=${book.id})}"><input type="submit" value="Reserve" /></form>
+        </td>
+
+
+    </tr>
+</table>
+<br/>
+<a href="/">Back</a>
+</body>
+</html>

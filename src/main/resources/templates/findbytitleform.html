@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head><title>Find by title Form</title></head>
+<body>
+<H3>Enter books title:</H3>
+<form method="post" th:action="@{/findbytitle}" th:object="${book}">
+    <table>
+        <tr>
+            <td><label for="title">Enter title: </label></td>
+            <td><input type="text" th:field="*{title}" id="title"/></td>
+        </tr>
+        <tr>
+            <td><button type="submit"> Search</button></td>
+        </tr>
+    </table>
+</form>
+</br>
+<a href="/">Back</a>
+<br/>
+</body>
+</html>
