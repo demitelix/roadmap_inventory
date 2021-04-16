@@ -1,6 +1,8 @@
 package lv.acc.springboot.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -9,6 +11,8 @@ import javax.persistence.Id;
 
 @Getter @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
     @Id
     @GeneratedValue
@@ -16,13 +20,6 @@ public class Book {
     private String title;
     private String author;
     private BookStatus bookStatus;
-
-    public Book(Long id, String title, String author, BookStatus bookStatus) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.bookStatus = bookStatus;
-    }
 
     @Override
     public String toString() {

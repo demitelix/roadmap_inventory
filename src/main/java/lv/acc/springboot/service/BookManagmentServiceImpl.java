@@ -7,7 +7,10 @@ import lv.acc.springboot.storage.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class BookManagmentServiceImpl implements BookManagmentService {
@@ -17,39 +20,58 @@ public class BookManagmentServiceImpl implements BookManagmentService {
 
     @Override
     public List<Book> showAllBooks() {
-        return db.getAllBooks();
+        return (List<Book>) db.findAll();
     }
 
     @Override
     public AcceptanceStatus addNewBook(Book book) {
-        //check if title and author filled
-        book.setBookStatus(BookStatus.AVAILABLE);
-        AcceptanceStatus acceptanceStatus = db.addBook(book);
-        return acceptanceStatus;
+        //check if title and author filled create VALIDATOR with TRY CATCH
+        if (book.getTitle() != null && book.getAuthor() != null
+                && !book.getTitle().isEmpty() && !book.getAuthor().isEmpty()) {
+            book.setBookStatus(BookStatus.AVAILABLE);
+            db.save(book);
+            return AcceptanceStatus.SUCCESSFUL;
+        } else
+            return AcceptanceStatus.REJECTED;
     }
 
     @Override
     public List<Book> findBookByTitle(String title) {
         //check id not null
-        List<Book> listOfBooks = db.findByTitle(title);
+        List<Book> listOfBooks = (List<Book>) db.findAll();
+        List<Book> matchingBooks = new ArrayList<>();
+        title = title.toLowerCase();
+        for (Book it : listOfBooks){
+            if(it.getTitle().toLowerCase().contains(title)){
+                matchingBooks.add(it);
+            }
+        }
         //check not null
-        return listOfBooks;
+        return matchingBooks;
     }
 
     @Override
     public List<Book> findBookById(Long id) {
         //check id not null
-        List<Book> books = db.findByIds(id);
+        List<Book> books = new ArrayList<>();
         //check not null
-        return books;
+        Book book = db.findById(id).orElse(null);
+        if (book == null) {
+            return Collections.emptyList();
+        } else {
+            books.add(book);
+            return books;
+        }
+
+
     }
 
     @Override
     public void changeBookStatus(Long id, BookStatus bookStatus) {
-        List<Book> books = db.findByIds(id);
-        Book book = books.get(0);
-        //Validate if not null
-        book.setBookStatus(bookStatus);
-        db.setNewStatus(id, book);
+        Book book = db.findById(id).orElse(null);
+        if (book != null){
+            book.setBookStatus(bookStatus);
+            db.save(book);
+        }
     }
 }

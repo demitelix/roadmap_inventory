@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+
 public interface BookManagmentService {
     List<Book>showAllBooks();
     void changeBookStatus(Long id, BookStatus bookStatus);
