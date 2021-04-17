@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class BookManagmentServiceImpl implements BookManagmentService {
@@ -38,16 +37,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
     @Override
     public List<Book> findBookByTitle(String title) {
         //check id not null
-        List<Book> listOfBooks = (List<Book>) db.findAll();
-        List<Book> matchingBooks = new ArrayList<>();
-        title = title.toLowerCase();
-        for (Book it : listOfBooks){
-            if(it.getTitle().toLowerCase().contains(title)){
-                matchingBooks.add(it);
-            }
-        }
-        //check not null
-        return matchingBooks;
+        return db.findByTitleContains(title);
     }
 
     @Override
@@ -69,7 +59,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
     @Override
     public void changeBookStatus(Long id, BookStatus bookStatus) {
         Book book = db.findById(id).orElse(null);
-        if (book != null){
+        if (book != null) {
             book.setBookStatus(bookStatus);
             db.save(book);
         }
