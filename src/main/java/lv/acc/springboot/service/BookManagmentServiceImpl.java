@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
 @Component
 public class BookManagmentServiceImpl implements BookManagmentService {
 
@@ -19,6 +20,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
 
     @Override
     public List<Book> showAllBooks() {
+
         return (List<Book>) db.findAll();
     }
 
@@ -44,7 +46,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
     public List<Book> findBookById(Long id) {
         //check id not null
         List<Book> books = new ArrayList<>();
-        //check not null
+        //check not null validator
         Book book = db.findById(id).orElse(null);
         if (book == null) {
             return Collections.emptyList();
