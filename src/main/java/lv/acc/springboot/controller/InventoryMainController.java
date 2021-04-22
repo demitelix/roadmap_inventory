@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-public class HelloController {
+public class InventoryMainController {
 
     @Autowired
 	BookManagmentService service;
