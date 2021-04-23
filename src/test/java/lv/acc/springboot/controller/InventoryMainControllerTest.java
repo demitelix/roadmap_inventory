@@ -78,16 +78,16 @@ class InventoryMainControllerTest {
                 .andReturn();
     }
 
-    @Test
-    void addNewBook() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders
-                .post("/addnewbook")
-                .accept(MediaType.ALL);
-        mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andExpect(view().name("addnewbookresult"))
-                .andReturn();
-    }
+//    @Test
+//    void addNewBook() throws Exception {
+//        RequestBuilder request = MockMvcRequestBuilders
+//                .post("/addnewbook")
+//                .accept(MediaType.ALL);
+//        mockMvc.perform(request)
+//                .andExpect(status().isOk())
+//                .andExpect(view().name("addnewbookresult"))
+//                .andReturn();
+//    }
 
     @Test
     void findByIdForm() throws Exception {
