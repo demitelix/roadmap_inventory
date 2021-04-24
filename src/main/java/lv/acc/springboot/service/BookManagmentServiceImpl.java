@@ -3,13 +3,15 @@ package lv.acc.springboot.service;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
+import lv.acc.springboot.service.validators.InputValidators;
+import lv.acc.springboot.service.validators.ResultValidators;
 import lv.acc.springboot.storage.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @Component
@@ -17,6 +19,12 @@ public class BookManagmentServiceImpl implements BookManagmentService {
 
     @Autowired
     Database db;
+
+    @Autowired
+    InputValidators validator;
+
+    @Autowired
+    ResultValidators resultValidators;
 
     @Override
     public List<Book> showAllBooks() {
@@ -26,44 +34,53 @@ public class BookManagmentServiceImpl implements BookManagmentService {
 
     @Override
     public AcceptanceStatus addNewBook(Book book) {
-        //check if title and author filled create VALIDATOR with TRY CATCH
-        if (book.getTitle() != null && book.getAuthor() != null
-                && !book.getTitle().isEmpty() && !book.getAuthor().isEmpty()) {
+        try {
+
+            validator.validateBookInput(book);
             book.setBookStatus(BookStatus.AVAILABLE);
             db.save(book);
             return AcceptanceStatus.SUCCESSFUL;
-        } else
+        } catch (Exception e) {
+            e.printStackTrace();
             return AcceptanceStatus.REJECTED;
+        }
     }
 
     @Override
     public List<Book> findBookByTitle(String title) {
-        //check id not null
-        return db.findByTitleContains(title);
+        try {
+            validator.validateTitleInput(title);
+            return db.findByTitleContains(title);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     @Override
     public List<Book> findBookById(Long id) {
-        //check id not null
-        List<Book> books = new ArrayList<>();
-        //check not null validator
-        Book book = db.findById(id).orElse(null);
-        if (book == null) {
+        try {
+            validator.validateIdInput(id);
+            Book book = db.findById(id).orElse(null);
+            resultValidators.checkNotNull(book);
+            return List.of(Objects.requireNonNull(book));
+        } catch (Exception e) {
+            e.printStackTrace();
             return Collections.emptyList();
-        } else {
-            books.add(book);
-            return books;
         }
-
 
     }
 
     @Override
     public void changeBookStatus(Long id, BookStatus bookStatus) {
-        Book book = db.findById(id).orElse(null);
-        if (book != null) {
-            book.setBookStatus(bookStatus);
+        try {
+            validator.validateIdInput(id);
+            Book book = db.findById(id).orElse(null);
+            resultValidators.checkNotNull(book);
+            Objects.requireNonNull(book).setBookStatus(bookStatus);
             db.save(book);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

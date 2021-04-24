@@ -1,15 +1,24 @@
 package lv.acc.springboot.controller;
 
+import lv.acc.springboot.model.AcceptanceStatus;
+import lv.acc.springboot.model.Book;
+import lv.acc.springboot.model.BookStatus;
 import lv.acc.springboot.service.BookManagmentService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.internal.matchers.Any;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -21,7 +30,7 @@ class InventoryMainControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    BookManagmentService service;
+    private BookManagmentService service;
 
     @Test
     void index() throws Exception {
@@ -80,6 +89,7 @@ class InventoryMainControllerTest {
 
 //    @Test
 //    void addNewBook() throws Exception {
+//        when(service.addNewBook(new Book())).thenReturn(AcceptanceStatus.SUCCESSFUL);
 //        RequestBuilder request = MockMvcRequestBuilders
 //                .post("/addnewbook")
 //                .accept(MediaType.ALL);
