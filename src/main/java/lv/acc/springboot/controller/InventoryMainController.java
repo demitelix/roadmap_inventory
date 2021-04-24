@@ -2,18 +2,23 @@ package lv.acc.springboot.controller;
 
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
+import lv.acc.springboot.model.WishBook;
 import lv.acc.springboot.service.BookManagmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 
 @Controller
 public class InventoryMainController {
+
+    private String viewbooks = "viewbooks";
 
     @Autowired
     BookManagmentService service;
@@ -26,7 +31,7 @@ public class InventoryMainController {
     @GetMapping("/allBooks")
     public String allBooks(Model model) {
         model.addAttribute("all", service.showAllBooks());
-        return "viewbooks";
+        return viewbooks;
     }
 
     @GetMapping("/{id}/returnBook")
@@ -42,39 +47,43 @@ public class InventoryMainController {
     }
 
     @GetMapping("/newbookform")
-    public String newBookForm(@ModelAttribute("book") Book book) {
+    public String newBookForm(@ModelAttribute("book") WishBook book) {
+
         return "newbookform";
     }
 
     @PostMapping("/addnewbook")
-    public String addNewBook(@ModelAttribute("book") Book book, Model model) {
-        book.setBookStatus(BookStatus.RESERVED);
-        String procedureStatus = service.addNewBook(book).toString();
+    public String addNewBook(@ModelAttribute("book") WishBook book, Model model) {
+        Book bookModel = new Book();
+        bookModel.setTitle(book.getTitle());
+        bookModel.setAuthor(book.getAuthor());
+        bookModel.setBookStatus(BookStatus.RESERVED);
+        String procedureStatus = service.addNewBook(bookModel).toString();
         model.addAttribute("statusMessage", procedureStatus);
         return "addnewbookresult";
     }
 
     @GetMapping("/findbyidform")
-    public String findByIdForm(@ModelAttribute("book") Book book) {
+    public String findByIdForm(@ModelAttribute("book") WishBook book) {
         return "findbyidform";
     }
 
     @PostMapping("/findbyid")
-    public String findById(@ModelAttribute("book") Book book, Model model) {
+    public String findById(@ModelAttribute("book") WishBook book, Model model) {
         List<Book> listOfBooks = service.findBookById(book.getId());
         model.addAttribute("all", listOfBooks);
-        return "viewbooks";
+        return viewbooks;
     }
 
     @GetMapping("/findbytitleform")
-    public String findByTitleForm(@ModelAttribute("book") Book book) {
+    public String findByTitleForm(@ModelAttribute("book") WishBook book) {
         return "findbytitleform";
     }
 
     @PostMapping("/findbytitle")
-    public String findByTitle(@ModelAttribute("book") Book book, Model model) {
+    public String findByTitle(@ModelAttribute("book") WishBook book, Model model) {
         List<Book> listOfBooks = service.findBookByTitle(book.getTitle());
         model.addAttribute("all", listOfBooks);
-        return "viewbooks";
+        return viewbooks;
     }
 }

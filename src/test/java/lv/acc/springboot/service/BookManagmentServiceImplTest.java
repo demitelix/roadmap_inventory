@@ -1,5 +1,6 @@
 package lv.acc.springboot.service;
 
+import lv.acc.springboot.exceptions.BookNotFoundException;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -113,4 +113,12 @@ class BookManagmentServiceImplTest {
         verify(db).save(book);
         assertSame(BookStatus.RESERVED,book.getBookStatus());
     }
+
+//    @Test
+//    void changeBookStatus_failed(){
+//        when(db.findById(anyLong())).thenReturn(null);
+//        bookManagmentServiceImpl.changeBookStatus(1L,BookStatus.RESERVED);
+//        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> bookManagmentServiceImpl.changeBookStatus(1L,BookStatus.RESERVED));
+//        assertEquals("Book not found", exception.getMessage());
+//    }
 }

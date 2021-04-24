@@ -1,5 +1,6 @@
 package lv.acc.springboot.service.validators;
 
+import lv.acc.springboot.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +17,7 @@ class ResultValidatorsTest {
 
     @Test
     void checkNotNull() {
-        Exception exception = assertThrows(Exception.class, () -> resultValidators.checkNotNull(null));
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> resultValidators.checkNotNull(null));
         assertEquals("Book not found", exception.getMessage());
     }
 }

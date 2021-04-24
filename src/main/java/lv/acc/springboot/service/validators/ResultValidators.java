@@ -1,13 +1,14 @@
 package lv.acc.springboot.service.validators;
 
+import lv.acc.springboot.exceptions.BookNotFoundException;
 import lv.acc.springboot.model.Book;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ResultValidators {
-    public void checkNotNull(Book book) throws Exception{
+    public void checkNotNull(Book book){
         if (book == null){
-            throw new Exception("Book not found");
+            throw new BookNotFoundException("Book not found");
         }
     }
 }

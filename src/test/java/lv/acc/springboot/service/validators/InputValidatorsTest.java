@@ -1,11 +1,14 @@
 package lv.acc.springboot.service.validators;
 
+import lv.acc.springboot.exceptions.EmptyFieldException;
+import lv.acc.springboot.exceptions.LessThanZeroException;
 import lv.acc.springboot.model.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @SpringBootTest
@@ -20,7 +23,7 @@ class InputValidatorsTest {
         book.setTitle("Title_1");
         book.setAuthor("");
 
-        Exception exception = assertThrows(Exception.class, () -> inputValidators.validateBookInput(book));
+        EmptyFieldException exception = assertThrows(EmptyFieldException.class, () -> inputValidators.validateBookInput(book));
         assertEquals("Author field is empty", exception.getMessage());
     }
 
@@ -30,22 +33,22 @@ class InputValidatorsTest {
         book.setTitle("");
         book.setAuthor("Any");
 
-        Exception exception = assertThrows(Exception.class, () -> inputValidators.validateBookInput(book));
+        EmptyFieldException exception = assertThrows(EmptyFieldException.class, () -> inputValidators.validateBookInput(book));
         assertEquals("Title field is empty", exception.getMessage());
     }
 
     @Test
     void validateTitleInput() {
-        Exception exception = assertThrows(Exception.class, () -> inputValidators.validateTitleInput(""));
+        EmptyFieldException exception = assertThrows(EmptyFieldException.class, () -> inputValidators.validateTitleInput(""));
         assertEquals("Title field is empty", exception.getMessage());
     }
 
     @Test
     void validateIdInput(){
-        Exception emptyFieldException = assertThrows(Exception.class, () -> inputValidators.validateIdInput(null));
+        EmptyFieldException emptyFieldException = assertThrows(EmptyFieldException.class, () -> inputValidators.validateIdInput(null));
         assertEquals("id field is empty", emptyFieldException.getMessage());
 
-        Exception lessThanZeroException = assertThrows(Exception.class, () -> inputValidators.validateIdInput(-1L));
+        LessThanZeroException lessThanZeroException = assertThrows(LessThanZeroException.class, () -> inputValidators.validateIdInput(-1L));
         assertEquals("id must be greater than 0", lessThanZeroException.getMessage());
     }
 }
