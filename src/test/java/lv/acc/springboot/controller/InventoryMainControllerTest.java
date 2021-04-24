@@ -87,17 +87,18 @@ class InventoryMainControllerTest {
                 .andReturn();
     }
 
-//    @Test
-//    void addNewBook() throws Exception {
-//        when(service.addNewBook(new Book())).thenReturn(AcceptanceStatus.SUCCESSFUL);
-//        RequestBuilder request = MockMvcRequestBuilders
-//                .post("/addnewbook")
-//                .accept(MediaType.ALL);
-//        mockMvc.perform(request)
-//                .andExpect(status().isOk())
-//                .andExpect(view().name("addnewbookresult"))
-//                .andReturn();
-//    }
+//    TODO: add scenario
+    @Test
+    void addNewBook() throws Exception {
+        when(service.addNewBook(new Book())).thenReturn(AcceptanceStatus.SUCCESSFUL);
+        RequestBuilder request = MockMvcRequestBuilders
+                .post("/addnewbook")
+                .accept(MediaType.ALL);
+        mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(view().name("addnewbookresult"))
+                .andReturn();
+    }
 
     @Test
     void findByIdForm() throws Exception {
