@@ -23,7 +23,7 @@ public class InputValidators {
         }
     }
 
-    public void validateIdInput(Long id) throws EmptyFieldException {
+    public void validateIdInput(Long id) throws EmptyFieldException, LessThanZeroException {
         if (id == null){
             throw new EmptyFieldException("id field is empty");
         }

@@ -1,5 +1,6 @@
 package lv.acc.springboot.service;
 
+import lv.acc.springboot.exceptions.LessThanZeroException;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
@@ -17,8 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -96,8 +96,8 @@ class BookManagmentServiceImplTest {
 
     @Test
     void findBookById_failed() {
-        List<Book> actualWhenLessThanZero = bookManagmentServiceImpl.findBookById(-1L);
-        assertEquals(Collections.emptyList(), actualWhenLessThanZero);
+        LessThanZeroException lessThanZeroException = assertThrows(LessThanZeroException.class, () -> bookManagmentServiceImpl.findBookById(-1L));
+        assertEquals("id must be greater than 0", lessThanZeroException.getMessage());
 
         List<Book> actualWhenNull = bookManagmentServiceImpl.findBookById(null);
         assertEquals(Collections.emptyList(), actualWhenNull);

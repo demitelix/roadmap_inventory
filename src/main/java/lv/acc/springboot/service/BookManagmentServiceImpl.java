@@ -1,5 +1,8 @@
 package lv.acc.springboot.service;
 
+import lv.acc.springboot.exceptions.BookNotFoundException;
+import lv.acc.springboot.exceptions.EmptyFieldException;
+import lv.acc.springboot.exceptions.LessThanZeroException;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
@@ -40,7 +43,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
             book.setBookStatus(BookStatus.AVAILABLE);
             db.save(book);
             return AcceptanceStatus.SUCCESSFUL;
-        } catch (Exception e) {
+        } catch (EmptyFieldException e) {
             e.printStackTrace();
             return AcceptanceStatus.REJECTED;
         }
@@ -51,7 +54,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
         try {
             validator.validateTitleInput(title);
             return db.findByTitleContains(title);
-        } catch (Exception e) {
+        } catch (EmptyFieldException e) {
             e.printStackTrace();
             return Collections.emptyList();
         }
@@ -64,7 +67,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
             Book book = db.findById(id).orElse(null);
             resultValidators.checkNotNull(book);
             return List.of(Objects.requireNonNull(book));
-        } catch (Exception e) {
+        } catch (EmptyFieldException | BookNotFoundException e) {
             e.printStackTrace();
             return Collections.emptyList();
         }
@@ -79,7 +82,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
             resultValidators.checkNotNull(book);
             Objects.requireNonNull(book).setBookStatus(bookStatus);
             db.save(book);
-        } catch (Exception e) {
+        } catch (EmptyFieldException | LessThanZeroException | BookNotFoundException e) {
             e.printStackTrace();
         }
     }
