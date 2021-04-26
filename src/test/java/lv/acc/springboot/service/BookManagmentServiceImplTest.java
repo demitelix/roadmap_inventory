@@ -1,6 +1,5 @@
 package lv.acc.springboot.service;
 
-import lv.acc.springboot.exceptions.BookNotFoundException;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
@@ -18,7 +17,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,46 +79,38 @@ class BookManagmentServiceImplTest {
 
     @Test
     void findBookByTitle_failed() {
-            List<Book> actual = bookManagmentServiceImpl.findBookByTitle("");
-            assertEquals(Collections.emptyList(), actual);
+        List<Book> actual = bookManagmentServiceImpl.findBookByTitle("");
+        assertEquals(Collections.emptyList(), actual);
     }
 
     @Test
-    void findBookById_success(){
+    void findBookById_success() {
         Book book = new Book(1L, "Title_1", "Author_1", BookStatus.AVAILABLE);
         List<Book> expectedListOfBooks = Stream.of(book).collect(Collectors.toList());
         when(db.findById(anyLong())).thenReturn(java.util.Optional.of(book));
 
-        List<Book>actual = bookManagmentServiceImpl.findBookById(1L);
+        List<Book> actual = bookManagmentServiceImpl.findBookById(1L);
 
-        assertEquals(expectedListOfBooks,actual);
+        assertEquals(expectedListOfBooks, actual);
     }
 
     @Test
-    void findBookById_failed(){
-        List<Book>actualWhenLessThanZero = bookManagmentServiceImpl.findBookById(-1L);
-        assertEquals(Collections.emptyList(),actualWhenLessThanZero);
+    void findBookById_failed() {
+        List<Book> actualWhenLessThanZero = bookManagmentServiceImpl.findBookById(-1L);
+        assertEquals(Collections.emptyList(), actualWhenLessThanZero);
 
-        List<Book>actualWhenNull = bookManagmentServiceImpl.findBookById(null);
-        assertEquals(Collections.emptyList(),actualWhenNull);
+        List<Book> actualWhenNull = bookManagmentServiceImpl.findBookById(null);
+        assertEquals(Collections.emptyList(), actualWhenNull);
     }
 
     @Test
-    void changeBookStatus_success(){
+    void changeBookStatus_success() {
         Book book = new Book(1L, "Title_1", "Author_1", BookStatus.AVAILABLE);
         when(db.findById(anyLong())).thenReturn(java.util.Optional.of(book));
 
-        bookManagmentServiceImpl.changeBookStatus(1L,BookStatus.RESERVED);
+        bookManagmentServiceImpl.changeBookStatus(1L, BookStatus.RESERVED);
 
         verify(db).save(book);
-        assertSame(BookStatus.RESERVED,book.getBookStatus());
+        assertSame(BookStatus.RESERVED, book.getBookStatus());
     }
-
-//    @Test
-//    void changeBookStatus_failed(){
-//        when(db.findById(anyLong())).thenReturn(null);
-//        bookManagmentServiceImpl.changeBookStatus(1L,BookStatus.RESERVED);
-//        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> bookManagmentServiceImpl.changeBookStatus(1L,BookStatus.RESERVED));
-//        assertEquals("Book not found", exception.getMessage());
-//    }
 }
