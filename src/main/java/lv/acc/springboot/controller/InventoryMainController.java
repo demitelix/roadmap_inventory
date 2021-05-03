@@ -1,9 +1,13 @@
 package lv.acc.springboot.controller;
 
+import lv.acc.springboot.exceptions.EmptyFieldException;
+import lv.acc.springboot.exceptions.LessThanZeroException;
+import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
 import lv.acc.springboot.model.WishBook;
 import lv.acc.springboot.service.BookManagmentService;
+import lv.acc.springboot.validators.InputValidators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +25,10 @@ public class InventoryMainController {
     private String viewbooks = "viewbooks";
 
     @Autowired
-    BookManagmentService service;
+    private BookManagmentService service;
+
+    @Autowired
+    private InputValidators inputValidators;
 
     @GetMapping("/")
     public String index() {
@@ -36,30 +43,46 @@ public class InventoryMainController {
 
     @GetMapping("/{id}/returnBook")
     public String returnBook(@PathVariable("id") Long id) {
-        service.changeBookStatus(id, BookStatus.AVAILABLE);
+        try {
+            inputValidators.validateIdInput(id);
+            service.changeBookStatus(id, BookStatus.AVAILABLE);
+        } catch (EmptyFieldException | LessThanZeroException e) {
+            e.printStackTrace();
+        }
         return "redirect:/allBooks";
     }
 
     @GetMapping("/{id}/reserveBook")
     public String reserveBook(@PathVariable("id") Long id) {
-        service.changeBookStatus(id, BookStatus.RESERVED);
+        try {
+            inputValidators.validateIdInput(id);
+            service.changeBookStatus(id, BookStatus.RESERVED);
+        } catch (EmptyFieldException | LessThanZeroException e) {
+            e.printStackTrace();
+        }
         return "redirect:/allBooks";
     }
 
     @GetMapping("/newbookform")
     public String newBookForm(@ModelAttribute("book") WishBook book) {
-
         return "newbookform";
     }
 
     @PostMapping("/addnewbook")
     public String addNewBook(@ModelAttribute("book") WishBook book, Model model) {
-        Book bookModel = new Book();
-        bookModel.setTitle(book.getTitle());
-        bookModel.setAuthor(book.getAuthor());
-        bookModel.setBookStatus(BookStatus.RESERVED);
-        String procedureStatus = service.addNewBook(bookModel).toString();
-        model.addAttribute("statusMessage", procedureStatus);
+        try {
+            inputValidators.validateTitleOrAuthorInput(book.getTitle());
+            inputValidators.validateTitleOrAuthorInput(book.getAuthor());
+            Book bookModel = new Book();
+            bookModel.setTitle(book.getTitle());
+            bookModel.setAuthor(book.getAuthor());
+            bookModel.setBookStatus(BookStatus.RESERVED);
+            String procedureStatus = service.addNewBook(bookModel).toString();
+            model.addAttribute("statusMessage", procedureStatus);
+        } catch (EmptyFieldException e) {
+            e.printStackTrace();
+            model.addAttribute("statusMessage", AcceptanceStatus.REJECTED);
+        }
         return "addnewbookresult";
     }
 
@@ -70,9 +93,21 @@ public class InventoryMainController {
 
     @PostMapping("/findbyid")
     public String findById(@ModelAttribute("book") WishBook book, Model model) {
-        List<Book> listOfBooks = service.findBookById(book.getId());
-        model.addAttribute("all", listOfBooks);
-        return viewbooks;
+        try {
+            inputValidators.validateIdInput(book.getId());
+            List<Book> listOfBooks = service.findBookById(book.getId());
+            if (listOfBooks.isEmpty()) {
+                model.addAttribute("error", "Book with ID not found");
+                return "nothingfound";
+            }
+            model.addAttribute("all", listOfBooks);
+            model.addAttribute("error", "");
+            return viewbooks;
+        } catch (EmptyFieldException | LessThanZeroException e) {
+            System.out.println(e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "findbyidform";
+        }
     }
 
     @GetMapping("/findbytitleform")
@@ -82,8 +117,19 @@ public class InventoryMainController {
 
     @PostMapping("/findbytitle")
     public String findByTitle(@ModelAttribute("book") WishBook book, Model model) {
-        List<Book> listOfBooks = service.findBookByTitle(book.getTitle());
-        model.addAttribute("all", listOfBooks);
-        return viewbooks;
+        try {
+            inputValidators.validateTitleOrAuthorInput(book.getTitle());
+            List<Book> listOfBooks = service.findBookByTitle(book.getTitle());
+            if (listOfBooks.isEmpty()) {
+                model.addAttribute("error", "Book with such criteria not found");
+                return "nothingfound";
+            }
+            model.addAttribute("all", listOfBooks);
+            return viewbooks;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "findbytitleform";
+        }
     }
 }

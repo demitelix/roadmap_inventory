@@ -1,4 +1,4 @@
-package lv.acc.springboot.service.validators;
+package lv.acc.springboot.validators;
 
 import lv.acc.springboot.exceptions.EmptyFieldException;
 import lv.acc.springboot.exceptions.LessThanZeroException;
@@ -39,7 +39,7 @@ class InputValidatorsTest {
 
     @Test
     void validateTitleInput() {
-        EmptyFieldException exception = assertThrows(EmptyFieldException.class, () -> inputValidators.validateTitleInput(""));
+        EmptyFieldException exception = assertThrows(EmptyFieldException.class, () -> inputValidators.validateTitleOrAuthorInput(""));
         assertEquals("Title field is empty", exception.getMessage());
     }
 

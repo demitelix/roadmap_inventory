@@ -1,4 +1,4 @@
-package lv.acc.springboot.service.validators;
+package lv.acc.springboot.validators;
 
 import lv.acc.springboot.exceptions.EmptyFieldException;
 import lv.acc.springboot.exceptions.LessThanZeroException;
@@ -17,7 +17,7 @@ public class InputValidators {
         }
     }
 
-    public void validateTitleInput(String title) throws EmptyFieldException{
+    public void validateTitleOrAuthorInput(String title) throws EmptyFieldException{
         if (title.isBlank() || title.isEmpty()){
             throw new EmptyFieldException("Title field is empty");
         }

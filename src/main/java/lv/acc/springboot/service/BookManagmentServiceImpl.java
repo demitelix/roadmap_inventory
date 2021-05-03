@@ -6,18 +6,19 @@ import lv.acc.springboot.exceptions.LessThanZeroException;
 import lv.acc.springboot.model.AcceptanceStatus;
 import lv.acc.springboot.model.Book;
 import lv.acc.springboot.model.BookStatus;
-import lv.acc.springboot.service.validators.InputValidators;
-import lv.acc.springboot.service.validators.ResultValidators;
+import lv.acc.springboot.validators.InputValidators;
+import lv.acc.springboot.validators.ResultValidators;
 import lv.acc.springboot.storage.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 
-@Component
+@Service
 public class BookManagmentServiceImpl implements BookManagmentService {
 
     @Autowired
@@ -52,7 +53,7 @@ public class BookManagmentServiceImpl implements BookManagmentService {
     @Override
     public List<Book> findBookByTitle(String title) {
         try {
-            validator.validateTitleInput(title);
+            validator.validateTitleOrAuthorInput(title);
             return db.findByTitleContains(title);
         } catch (EmptyFieldException e) {
             e.printStackTrace();

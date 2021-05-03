@@ -10,12 +10,16 @@
             <td><input type="text" th:field="*{title}" id="title"/></td>
         </tr>
         <tr>
-            <td><button type="submit"> Search</button></td>
+            <td>
+                <button type="submit"> Search</button>
+            </td>
         </tr>
     </table>
 </form>
 </br>
 <a href="/">Back</a>
+<br/>
+<h4 th:text="${error}" style="color:red"></h4>
 <br/>
 </body>
 </html>

@@ -1,4 +1,4 @@
-package lv.acc.springboot.service.validators;
+package lv.acc.springboot.validators;
 
 import lv.acc.springboot.exceptions.BookNotFoundException;
 import org.junit.jupiter.api.Test;

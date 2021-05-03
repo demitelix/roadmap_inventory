@@ -4,18 +4,22 @@
 <body>
 <H3>Enter books id:</H3>
 <form method="post" th:action="@{/findbyid}" th:object="${book}">
-<table>
-    <tr>
-        <td><label for="id">Enter id: </label></td>
-        <td><input type="number" th:field="*{id}" id="id"/></td>
-    </tr>
-    <tr>
-        <td><button type="submit"> Search</button></td>
-    </tr>
-</table>
+    <table>
+        <tr>
+            <td><label for="id">Enter id: </label></td>
+            <td><input type="number" th:field="*{id}" id="id"/></td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit"> Search</button>
+            </td>
+        </tr>
+    </table>
 </form>
 </br>
 <a href="/">Back</a>
+<br/>
+<h4 th:text="${error}" style="color:red"></h4>
 <br/>
 </body>
 </html>
