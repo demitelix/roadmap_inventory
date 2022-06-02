@@ -18,5 +18,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+      - name: grant permission
+        run: git update-index --chmod=+x gradlew
       - name: Gradle build
         run: ./gradlew build
