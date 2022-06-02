@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -24,11 +25,16 @@ public class InventoryMainController {
 
     private String viewbooks = "viewbooks";
 
-    @Autowired
-    private BookManagmentService service;
+//    @Autowired
+    private final BookManagmentService service;
 
-    @Autowired
-    private InputValidators inputValidators;
+    public InventoryMainController(final BookManagmentService service, final InputValidators inputValidators) {
+        this.service = service;
+        this.inputValidators = inputValidators;
+    }
+
+    //    @Autowired
+    private final InputValidators inputValidators;
 
     @GetMapping("/")
     public String index() {
@@ -69,7 +75,7 @@ public class InventoryMainController {
     }
 
     @PostMapping("/addnewbook")
-    public String addNewBook(@ModelAttribute("book") WishBook book, Model model) {
+    public String addNewBook(@ModelAttribute("book") WishBook book, Model model, RedirectAttributes redirAttrs) {
         try {
             inputValidators.validateTitleOrAuthorInput(book.getTitle());
             inputValidators.validateTitleOrAuthorInput(book.getAuthor());
@@ -79,11 +85,13 @@ public class InventoryMainController {
             bookModel.setBookStatus(BookStatus.RESERVED);
             String procedureStatus = service.addNewBook(bookModel).toString();
             model.addAttribute("statusMessage", procedureStatus);
+            redirAttrs.addFlashAttribute("success", "Everything went just fine.");
         } catch (EmptyFieldException e) {
             e.printStackTrace();
+            redirAttrs.addFlashAttribute("error", "The error XYZ occurred.");
             model.addAttribute("statusMessage", AcceptanceStatus.REJECTED);
         }
-        return "addnewbookresult";
+        return "redirect:/allBooks";
     }
 
     @GetMapping("/findbyidform")

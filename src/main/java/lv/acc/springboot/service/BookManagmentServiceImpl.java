@@ -1,5 +1,6 @@
 package lv.acc.springboot.service;
 
+import lombok.RequiredArgsConstructor;
 import lv.acc.springboot.exceptions.BookNotFoundException;
 import lv.acc.springboot.exceptions.EmptyFieldException;
 import lv.acc.springboot.exceptions.LessThanZeroException;
@@ -18,17 +19,18 @@ import java.util.List;
 import java.util.Objects;
 
 
-@Service
+//@Service
+@RequiredArgsConstructor
 public class BookManagmentServiceImpl implements BookManagmentService {
 
-    @Autowired
-    Database db;
+//    @Autowired
+    private final Database db;
 
-    @Autowired
-    InputValidators validator;
+//    @Autowired
+    private final InputValidators validator;
 
-    @Autowired
-    ResultValidators resultValidators;
+//    @Autowired
+    private final ResultValidators resultValidators;
 
     @Override
     public List<Book> showAllBooks() {

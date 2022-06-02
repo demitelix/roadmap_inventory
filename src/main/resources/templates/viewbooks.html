@@ -5,6 +5,8 @@
     <title>View All Books</title>
 </head>
 <body>
+<div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
+<div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
 <table>
     <tr><td>id</td><td>Title</td><td>Author</td><td>Status</td></tr>
     <tr th:each="book: ${all}">
